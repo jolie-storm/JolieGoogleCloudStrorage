@@ -32,13 +32,13 @@ type CopyRequest:void{
 type CopyResponse:void
 
 
-type RenameRequestGoogleStorage:void{
+type RenameRequest:void{
       bucketName:string
       objectName:string
       newObjectName:string
 }
 
-type RenameResponseGoogleStorage:void
+type RenameResponse:void
 
 type MoveRequest:void{
       bucketName:string
@@ -69,12 +69,12 @@ type GenerateGetObjectSignedUrlResponse:void{
 }
 
 
-type DeleteRequestGoogleStorage:void{
+type DeleteRequest:void{
      bucketName:string
      objectName:string
 }
 
-type DeleteResponseGoogleStorage:void
+type DeleteResponse:void
 
 
 
@@ -86,22 +86,25 @@ interface GoogleCloudStorageInterface {
     upload(UploadRequest)(UploadResponse) throws IOException(string),
     download(DownloadRequest)(DownloadResponse) throws StorageException(string),
     copy(CopyRequest)(DownloadResponse) throws StorageException(string),
-    rename(RenameRequestGoogleStorage)(RenameResponseGoogleStorage) throws StorageException(string),
+    rename(RenameRequest)(RenameResponse) throws StorageException(string),
     move(MoveRequest)(MoveResponse) throws StorageException(string),
     createBucket(CreateBucketRequest)(CreateBucketResponse) throws StorageException(string),
     generateGetObjectSignedUrl(GenerateGetObjectSignedUrlRequest)(GenerateGetObjectSignedUrlResponse) throws IOException(string),
-    delete(DeleteRequestGoogleStorage)(DeleteResponseGoogleStorage) 
+    delete(DeleteRequest)(DeleteResponse) 
 }
 
 
-outputPort GoogleCloudStorage {
-  Interfaces: GoogleCloudStorageInterface
-}
 
+service GoogleCloudStorage {
+  
+inputPort ip {
+        location:"local"
+        interfaces: GoogleCloudStorageInterface
+    }
 
-embedded {
-  Java:
-    "joliex.google.GoogleCloudStorageService" in GoogleCloudStorage
+foreign java {
+  class: "joliex.google.GoogleCloudStorageService" 
+  }
 }
 
 

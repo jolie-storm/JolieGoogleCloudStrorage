@@ -1,9 +1,16 @@
-include "./interfaces/GoogleCloudStorageInterface.iol"
-include "file.iol"
+from file import File
+from  "./packages/google_cloud_storage" import GoogleCloudStorage
+
+
+
+service TestService{
+
+embed File as File 
+embed GoogleCloudStorage  as GoogleCloudStorage
 
 main{
     connectRequest.projectId = "jvproject-289212"
-    connectRequest.certificateFilePath = "jvproject-289212-ce3b03a915fd.json"
+    connectRequest.certificateFilePath ="jvproject-289212-ce3b03a915fd.json"
 
     connect@GoogleCloudStorage(connectRequest)(connectResponse)
     
@@ -15,5 +22,8 @@ main{
     uploadRequest.content = readFileResponse
     uploadRequest.objectName = "test.txt"
     upload@GoogleCloudStorage( uploadRequest  )(  )
+
+}
+
 
 }
