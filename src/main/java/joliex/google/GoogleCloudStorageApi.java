@@ -1,5 +1,6 @@
 package joliex.google;
 
+import com.google.api.gax.paging.Page;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.ByteArray;
 import com.google.cloud.storage.*;
@@ -14,7 +15,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class GoogleCloudStorageApi {
-    public void upload( Storage storage , String bucketName, String objectName, byte[] content) throws IOException {
+    public void upload( Storage storage , String bucketName, String objectName, byte[] content , boolean publicVisibility) throws IOException {
 
 
         BlobId blobId = BlobId.of(bucketName, objectName);
@@ -22,6 +23,9 @@ public class GoogleCloudStorageApi {
         String mimeType = Files.probeContentType(path);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(mimeType).build();
         storage.create(blobInfo,content);
+        if (publicVisibility){
+            storage.createAcl(blobId, Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
+        }
 
     }
 
@@ -99,6 +103,12 @@ public class GoogleCloudStorageApi {
         Blob blob = storage.get(bucketName, objectName);
         blob.delete();
     }
+
+    public static Page<Blob> list (Storage storage, String bucketName){
+        Bucket bucket = storage.get(bucketName);
+        return bucket.list();
+    }
+
 
 
 }

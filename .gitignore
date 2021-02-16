@@ -1,8 +1,8 @@
 *.json
 .idea/*
-.target/*
-.settings/*
-.project
+target/*
+settings/*
+project
 *.iml
 .classpath
 .factorypath

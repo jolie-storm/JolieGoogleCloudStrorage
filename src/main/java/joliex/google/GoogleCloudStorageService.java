@@ -1,6 +1,8 @@
 package joliex.google;
 
+import com.google.api.gax.paging.Page;
 import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageException;
 import com.google.cloud.storage.StorageOptions;
@@ -37,7 +39,8 @@ public class GoogleCloudStorageService extends JavaService {
             googleCloudStorageApi.upload(storage,
                     request.getFirstChild("bucketName").strValue(),
                     request.getFirstChild("objectName").strValue(),
-                    request.getFirstChild("content").byteArrayValue().getBytes());
+                    request.getFirstChild("content").byteArrayValue().getBytes(),
+                    request.getFirstChild("public").boolValue());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -143,6 +146,20 @@ public class GoogleCloudStorageService extends JavaService {
         } catch (StorageException e) {
             throw new FaultException( "StorageException", e.getMessage() );
         }
+    }
+
+    @RequestResponse
+    public Value list (Value request){
+        Value response = Value.create();
+        Page<Blob> objects = googleCloudStorageApi.list( storage,
+                                    request.getFirstChild("bucketName").strValue());
+        for (Blob object : objects.iterateAll()) {
+            Value objectValue = Value.create();
+            objectValue.getFirstChild("name").setValue(object.getName());
+            objectValue.getFirstChild("mime").setValue(object.getContentType());
+            response.getChildren("objects").add(objectValue);
+        }
+        return response;
     }
 
 

@@ -10,6 +10,7 @@ type UploadRequest:void{
  bucketName:string
  objectName:string
  content:raw
+ public:bool
 }
 
 type UploadResponse:void
@@ -77,6 +78,17 @@ type DeleteRequest:void{
 type DeleteResponse:void
 
 
+type ListRequestGoogleStorage:void{
+     bucketName:string
+    
+}
+
+type ListResponseGoogleStorage:void{
+   objects*:void{
+     name:string 
+     mime:string
+   }
+}
 
 
 
@@ -90,7 +102,8 @@ interface GoogleCloudStorageInterface {
     move(MoveRequest)(MoveResponse) throws StorageException(string),
     createBucket(CreateBucketRequest)(CreateBucketResponse) throws StorageException(string),
     generateGetObjectSignedUrl(GenerateGetObjectSignedUrlRequest)(GenerateGetObjectSignedUrlResponse) throws IOException(string),
-    delete(DeleteRequest)(DeleteResponse) 
+    delete(DeleteRequest)(DeleteResponse) ,
+    list(ListRequestGoogleStorage)(ListResponseGoogleStorage)
 }
 
 

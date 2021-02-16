@@ -21,7 +21,11 @@ main{
     uploadRequest.bucketName = "example_bucket_balint"
     uploadRequest.content = readFileResponse
     uploadRequest.objectName = "test.txt"
+    uploadRequest.public = false
     upload@GoogleCloudStorage( uploadRequest  )(  )
+
+    listRequest.bucketName = "example_bucket_balint"
+    list@GoogleCloudStorage( listRequest )(  )
 
 }
 
