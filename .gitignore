@@ -1,4 +1,4 @@
-*.json
+certificates/*
 .idea/*
 target/*
 settings/*
@@ -6,3 +6,5 @@ project
 *.iml
 .classpath
 .factorypath
+.tmp/*
+src/**/*.json
